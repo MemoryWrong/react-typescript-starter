@@ -1,5 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
+const isDevelopment = process.env.NODE_ENV === 'development';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 
 const config = {
   mode: "development",
@@ -11,16 +14,9 @@ const config = {
   devServer: {
     port:8080,
     contentBase: path.join(__dirname, 'dist'),
-    writeToDisk: false
+    writeToDisk: false,
+    open: true
   },
-  /* The stats option lets you control what bundling information to display. */
-// devServer: {
-//   stats: {
-//       children: false, // Hide children information
-//       maxModules: 0 // Set the maximum number of modules to be shown
-//   },
-//   port: 3001
-// },
   module: {
     rules: [
       {
@@ -41,11 +37,36 @@ const config = {
         exclude: /node_modules/
       },
       {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
+        test: /\.module\.s(a|c)ss$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: isDevelopment
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
+        ]
+      },
+      {
+        test: /\.s(a|c)ss$/,
+        exclude: /\.module.(s(a|c)ss)$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
-          'sass-loader'
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
         ]
       },
       {
@@ -70,11 +91,16 @@ const config = {
       '.js',
       '.jsx',
       '.tsx',
-      '.ts'
+      '.ts',
+      '.scss'
     ]
   },
   plugins: [
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+    new MiniCssExtractPlugin({
+     filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+     chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+   })
   ]
 }
 

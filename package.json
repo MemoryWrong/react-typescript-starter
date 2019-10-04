@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "http-server": "^0.11.1",
+    "mini-css-extract-plugin": "^0.8.0",
     "moment": "^2.24.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1"
