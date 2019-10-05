@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from "react-dom";
-import './index.module';
+import './index.scss';
 
 interface Props {
    name: string
@@ -8,9 +8,9 @@ interface Props {
 
 class App extends React.Component<Props> {
   render() {
-    return <div className='test'>Hello {this.props.name} + 1</div>;
+    return <div className='test'>Hello {this.props.name}</div>;
   }
 }
 
 var mountNode = document.getElementById("app");
-ReactDOM.render(<App name="Jane" />, mountNode);
+ReactDOM.render(<App name="Hello World" />, mountNode);

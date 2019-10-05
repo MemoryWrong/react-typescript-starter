@@ -98,8 +98,10 @@ const config = {
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new MiniCssExtractPlugin({
-     filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-     chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    //  filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+    //  chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+      filename:'bundle.css',
+      chunkFilename:'bundle.css',
    })
   ]
 }

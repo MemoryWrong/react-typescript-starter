@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start-webpack": "npm run clean && npm run build-dev && webpack-dev-server --mode development",
     "clean": "rm dist/*.*",
-    "start-http": "npm run build-dev &&  http-server ./dist",
     "build-dev": "webpack -d --mode development && cp views/*.html dist/",
-    "build-prod": "webpack -p --mode production &&",
-    "start-webpack": "npm run build-dev && webpack-dev-server --mode development"
+    "build-prod": "webpack -p --mode production &&"
   },
   "author": "",
   "license": "ISC",
