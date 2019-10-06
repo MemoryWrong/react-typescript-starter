@@ -2,14 +2,37 @@ const webpack = require('webpack');
 const path = require('path');
 const isDevelopment = process.env.NODE_ENV === 'development';
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+function recursiveIssuer(m) {
+  if (m.issuer) {
+    return recursiveIssuer(m.issuer);
+  } else if (m.name) {
+    return m.name;
+  } else {
+    return false;
+  }
+}
 
 const config = {
   mode: "development",
-  entry: './src/index.tsx',
+  // entry: './src/index.tsx',
+  // entry: {
+  //   'bundle':'./src/index.tsx',
+  //   'theme-a':'./src/scss/themes/themeA.scss',
+  //   'theme-b':'./src/scss/themes/themeB.scss'
+  // },
+  // entry: {
+  //   'bundle':'./src/index.tsx',
+  // },
+  entry: [
+    './src/index.tsx',
+    './src/scss/themes/a/a.scss',
+    './src/scss/themes/b/b.scss',
+  ],
+
   output: {
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    publicPath: '/dist'
   },
   devServer: {
     port:8080,
@@ -20,55 +43,16 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
-      {
         test: /\.(ts|tsx)?$/,
         loader: 'ts-loader',
         exclude: /node_modules/
       },
       {
-        test: /\.module\.s(a|c)ss$/,
-        loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              sourceMap: isDevelopment
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDevelopment
-            }
-          }
-        ]
+        test: /\.(js|jsx)$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
       },
-      {
-        test: /\.s(a|c)ss$/,
-        exclude: /\.module.(s(a|c)ss)$/,
-        loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDevelopment
-            }
-          }
-        ]
-      },
+      //  images loader 
       {
         test: /\.svg$/,
         use: 'file-loader'
@@ -83,7 +67,49 @@ const config = {
             }
           }
         ]
-      }
+      },
+
+      // sass css loader
+      {
+        // test: /\.scss$/,
+        test: /\.s[ac]ss$/i,
+        use: [  
+            {
+                loader: 'file-loader',
+                options: {
+                    name: '[name].css',
+                    // outputPath: '/',
+                    publicPath: '/dist'
+                }
+            },
+            {
+                loader: 'extract-loader'
+            },
+            {
+                loader: 'css-loader',
+            },
+            {
+                loader: 'sass-loader',
+                options: {
+                    sourceMap: true
+                }
+            }
+        ]
+      },
+      // ............
+      // {
+      //   test: /\.s[ac]ss$/i,
+      //   use: [
+      //     // process.env.NODE_ENV !== 'production'
+      //     //   ? 'style-loader'
+      //     //   : MiniCssExtractPlugin.loader,
+      //     // 'css-loader',
+      //     // 'sass-loader',
+      //     MiniCssExtractPlugin.loader,
+      //     'css-loader',
+      //     'sass-loader'
+      //   ],
+      // }
     ]
   },
   resolve: {
@@ -96,13 +122,13 @@ const config = {
     ]
   },
   plugins: [
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+    // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new MiniCssExtractPlugin({
-    //  filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-    //  chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-      filename:'bundle.css',
-      chunkFilename:'bundle.css',
-   })
+      // filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+      // chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+      filename:'[name].css',
+      chunkFilename:'[id].css',
+    })
   ]
 }
 

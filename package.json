@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-webpack": "npm run clean && npm run build-dev && webpack-dev-server --mode development",
+    "start-webpack": "npm run build-dev && webpack-dev-server --mode development",
+    "deploy-webpack": "npm run build-dev && webpack-dev-server --mode production",
     "clean": "rm dist/*.*",
     "build-dev": "webpack -d --mode development && cp views/*.html dist/",
     "build-prod": "webpack -p --mode production &&"
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "extract-text-webpack-plugin": "^3.0.2",
     "http-server": "^0.11.1",
     "mini-css-extract-plugin": "^0.8.0",
     "moment": "^2.24.0",
@@ -26,6 +28,7 @@
     "@types/react-dom": "^16.9.1",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
+    "extract-loader": "^3.1.0",
     "file-loader": "^4.2.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
